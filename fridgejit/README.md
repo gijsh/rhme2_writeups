@@ -436,8 +436,7 @@ The complete check is:
 
 So this means that input should be: `ror(0x3d6782a5 ^ 0x5dd53c4f,17)) = 0x5f753059` which corresponds to the string `Y0u_`
 
-Following this same analysis a bit further yields the complete flag:
-```Y0u_G0T_1t_r1ght!```
+Following this same analysis a bit further yields the complete flag: ```Y0u_G0T_1t_r1ght!```
 
 # Other 400 - Hide and Seek
 
@@ -487,8 +486,7 @@ I analyzed some of the opcode handlers for obvious flaws and found the following
    0x12b8:      std     Z+3, r27        ; 0x03
 ```
 
-The XOR opcode is encoded as follows:
-```0a<r1><r2>```, for example ```0a25``` means ```XOR r2, r5``` the flaw is that in the virtual architecture only 8 registers exist (r0-r7) however we can specify registers up to 0xf no check is done. The source and destination registry number are simply multiplied by 4 and added to a base value. This means we can overwrite values in memory using the XOR instruction.
+The XOR opcode is encoded as follows: ```0a<r1><r2>```, for example ```0a25``` means ```XOR r2, r5``` the flaw is that in the virtual architecture only 8 registers exist (r0-r7) however we can specify registers up to 0xf no check is done. The source and destination registry number are simply multiplied by 4 and added to a base value. This means we can overwrite values in memory using the XOR instruction.
 
 The memory layout is as follows:
 
