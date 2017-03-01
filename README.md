@@ -15,7 +15,3 @@ The writeups are split up per category:
 * [Fault injection](fi/README.md)
 * [Misc](misc/README.md)
 * [FridgeJIT](fridgejit/README.md)
-
-# Final Scoreboard Top 10
-
-![Scoreboard](scoreboard.png)
