@@ -2,12 +2,11 @@
 
 The following description is given for this challenge:
 
-```
-We have received a portable asymmetric key storage for evaluation purposes. 
-This portable device was manufactured by Ebian Corp to facilitate secure communications with customers. It generates and stores adminstrators' public keys. 
-Customers can use this repository to find the public key of the admin they want to contact, and administrators can use this repository to update their key information. 
-If this fancy keychain passes the test we are going to give them away like candy, secure candy.
-```
+> We have received a portable asymmetric key storage for evaluation purposes. 
+> This portable device was manufactured by Ebian Corp to facilitate secure communications with customers. It generates and stores adminstrators' public keys. 
+> Customers can use this repository to find the public key of the admin they want to contact, and administrators can use this repository to update their key information. 
+> If this fancy keychain passes the test we are going to give them away like candy, secure candy.
+
 
 Interacting with the board yields the following:
 
@@ -66,30 +65,28 @@ FLAG:cf2194c3103a2b2c69b5be67e6b10bff
 
 The following description is given for this challenge:
 
-```
-We don't remember why, but we wanted a file system on an AVR328p. After the system was completed we discovered that it lacked basic security. A couple of beers later we came up with what we think is a revolutionary way to do file system permissions. It is now your task to fill in our shoes and test its security.
-
-The filesystem allows you to request the contents of one or more available files by using the following
-format:
-
-token#<filename>[:<filename>]
-
-So for example, a request would be:
-
-933d86ae930c9a5d6d3a334297d9e72852f05c57#cat.txt:finances.csv
-
-Some example files (token | call):
-
-96103df3b928d9edc5a103d690639c94628824f5 | cat.txt
-933d86ae930c9a5d6d3a334297d9e72852f05c57 | cat.txt:finances.csv
-83f86c0ba1d2d5d60d055064256cd95a5ae6bb7d | cat.txt:finances.csv:joke.txt
-ba2e8af09b57080549180a32ac1ff1dde4d30b14 | cat.txt:joke.txt
-0b939251f4c781f43efef804ee8faec0212f1144 | finances.csv
-4b0972ec7282ad9e991414d1845ceee546eac7a1 | finances.csv:joke.txt
-715b21027dca61235e2663e59a9bdfb387ca7997 | joke.txt
-
-Can you access any file you're not supposed to?
-```
+> We don't remember why, but we wanted a file system on an AVR328p. After the system was completed we discovered that it lacked basic security. A couple of beers later we came up with what we think is a revolutionary way to do file system permissions. It is now your task to fill in our shoes and test its security.
+> 
+> The filesystem allows you to request the contents of one or more available files by using the following
+> format:
+> 
+> token#<filename>[:<filename>]
+> 
+> So for example, a request would be:
+> 
+> 933d86ae930c9a5d6d3a334297d9e72852f05c57#cat.txt:finances.csv
+> 
+> Some example files (token | call):
+> 
+> 96103df3b928d9edc5a103d690639c94628824f5 | cat.txt
+> 933d86ae930c9a5d6d3a334297d9e72852f05c57 | cat.txt:finances.csv
+> 83f86c0ba1d2d5d60d055064256cd95a5ae6bb7d | cat.txt:finances.csv:joke.txt
+> ba2e8af09b57080549180a32ac1ff1dde4d30b14 | cat.txt:joke.txt
+> 0b939251f4c781f43efef804ee8faec0212f1144 | finances.csv
+> 4b0972ec7282ad9e991414d1845ceee546eac7a1 | finances.csv:joke.txt
+> 715b21027dca61235e2663e59a9bdfb387ca7997 | joke.txt
+> 
+> Can you access any file you're not supposed to?
 
 Interacting with the board yields the following:
 
@@ -141,37 +138,35 @@ FLAG:2bdb3e0df152165690fd099eda0f6529
 
 The following description is given for this challenge:
 
-```
-After the horrible debacle of the first file system, we got together again, invited our friend Mr. Wodka and waterproofed the secure file system. You can test it again, but this time it uses unbreakable encryption.
-
-The filesystem allows you to request the contents of one or more available files by using the following
-format:
-
-token#<filename>[:<filename>]
-
-So for example, a request would be:
-
-897703036b2e18116b36353d92ac3dd978845fc99a735b8a3a3a9b3cc5239fdf4572157296903a0237a4aaeeaa8f3d15#joke.txt
-
-Some example files (token | call):
-
-897703036b2e18116b36353d92ac3dd978845fc99a735b8a |
-dfd0f4a25b7d529e89ac030c2b681e93831e95a8186823b9 | cat.txt
-897703036b2e18116b36353d92ac3dd978845fc99a735b8a |
-f2bca35d472116dc6d5bebe96f1a3af249be78c63219a0dc | cat.txt:finances.csv
-897703036b2e18116b36353d92ac3dd978845fc99a735b8a |
-7eed666977d3861dbaefd16b2ed7dc5b639e51853ca6e7b3 | cat.txt:finances.csv:joke.txt
-897703036b2e18116b36353d92ac3dd978845fc99a735b8a |
-51d915246394ce976f8768cf3300087cb5b9958bbec30f9c | cat.txt:joke.txt
-897703036b2e18116b36353d92ac3dd978845fc99a735b8a |
-ae2a5a38b4d03f0103bce59874e41a0df19cb39b328b02fa | finances.csv
-897703036b2e18116b36353d92ac3dd978845fc99a735b8a |
-c66b5e48f5e600982724eca3804fb59b7b0f395a6e17e1ce | finances.csv:joke.txt
-897703036b2e18116b36353d92ac3dd978845fc99a735b8a |
-3a3a9b3cc5239fdf4572157296903a0237a4aaeeaa8f3d15 | joke.txt
-
-Can you access any file you're not supposed to?
-```
+> After the horrible debacle of the first file system, we got together again, invited our friend Mr. Wodka and waterproofed the secure file system. You can test it again, but this time it uses unbreakable encryption.
+> 
+> The filesystem allows you to request the contents of one or more available files by using the following
+> format:
+> 
+> token#<filename>[:<filename>]
+> 
+> So for example, a request would be:
+> 
+> 897703036b2e18116b36353d92ac3dd978845fc99a735b8a3a3a9b3cc5239fdf4572157296903a0237a4aaeeaa8f3d15#joke.txt
+> 
+> Some example files (token | call):
+> 
+> 897703036b2e18116b36353d92ac3dd978845fc99a735b8a |
+> dfd0f4a25b7d529e89ac030c2b681e93831e95a8186823b9 | cat.txt
+> 897703036b2e18116b36353d92ac3dd978845fc99a735b8a |
+> f2bca35d472116dc6d5bebe96f1a3af249be78c63219a0dc | cat.txt:finances.csv
+> 897703036b2e18116b36353d92ac3dd978845fc99a735b8a |
+> 7eed666977d3861dbaefd16b2ed7dc5b639e51853ca6e7b3 | cat.txt:finances.csv:joke.txt
+> 897703036b2e18116b36353d92ac3dd978845fc99a735b8a |
+> 51d915246394ce976f8768cf3300087cb5b9958bbec30f9c | cat.txt:joke.txt
+> 897703036b2e18116b36353d92ac3dd978845fc99a735b8a |
+> ae2a5a38b4d03f0103bce59874e41a0df19cb39b328b02fa | finances.csv
+> 897703036b2e18116b36353d92ac3dd978845fc99a735b8a |
+> c66b5e48f5e600982724eca3804fb59b7b0f395a6e17e1ce | finances.csv:joke.txt
+> 897703036b2e18116b36353d92ac3dd978845fc99a735b8a |
+> 3a3a9b3cc5239fdf4572157296903a0237a4aaeeaa8f3d15 | joke.txt
+> 
+> Can you access any file you're not supposed to?
 
 Interacting with the board yields the following:
 

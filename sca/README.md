@@ -2,11 +2,9 @@
 
 The following description is given for this challenge:
 
-```
-This is an easy SCA challenge using a cipher implementation without any SCA or DFA countermeasures. Find the key used to encrypt and decrypt messages. Please, consider both SCA and DFA attacks.
-
-To encrypt a message, send the letter 'e' followed of 16 bytes. To decrypt a message, send the letter 'd' followed of 16 bytes.
-```
+> This is an easy SCA challenge using a cipher implementation without any SCA or DFA countermeasures. Find the key used to encrypt and decrypt messages. Please, consider both SCA and DFA attacks.
+> 
+> To encrypt a message, send the letter 'e' followed of 16 bytes. To decrypt a message, send the letter 'd' followed of 16 bytes.
 
 The challenge requires side channel analysis. The first step I performed was using the logic analyzer to identify if any of the digital or analogue PINs provided any output during the encryption operation. It turns out that right after input is sent to the board D13 (LED) goes high and right before output is sent is goed low again. This means that D13 can be used as a trigger to identify the code where the encryption is performed.
 

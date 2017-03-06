@@ -2,11 +2,10 @@
 
 The following description is given for this challenge:
 
-```
-We really need access to this lab protected with an Arduino-based access control system. Our operatives obtained a flash dump from a non-personalized engineering sample, but we are having trouble reverse engineering it.
 
-Can you help us get the password to get through?
-```
+> We really need access to this lab protected with an Arduino-based access control system. Our operatives obtained a flash dump from a non-personalized engineering sample, but we are having trouble reverse engineering it.
+> 
+> Can you help us get the password to get through?
 
 Interacting with the board only yields an Input prompt, followed by 'Better luck next time!' every time some input is tried.
 
@@ -308,11 +307,9 @@ FLAG:a22b5049a14b23fbe81fdc329e036272
 
 The following description is given for this challenge:
 
-```
-We have found this binary in an abandoned building. The police suspect someone set the building on fire by accident but we KNOW it was arson. Someone was trying to hide a secret plan of attack against the Republic of Wadiya. We think the binary contains the key to a safe that we were able to recover. Reverse the binary and help us find the secret key. You can be the hero we know you are!
-
-But beware, not everything is what it seems! Wadiyan soldiers are masters of disguise so we might have an impostor on the run.
-```
+> We have found this binary in an abandoned building. The police suspect someone set the building on fire by accident but we KNOW it was arson. Someone was trying to hide a secret plan of attack against the Republic of Wadiya. We think the binary contains the key to a safe that we were able to recover. Reverse the binary and help us find the secret key. You can be the hero we know you are!
+> 
+> But beware, not everything is what it seems! Wadiyan soldiers are masters of disguise so we might have an impostor on the run.
 
 The same techniques as described above were used to get a binary that can be run using the simduino simulator. A similar approach was used to identify the input loop and the code that processes the input.
 

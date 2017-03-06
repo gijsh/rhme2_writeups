@@ -6,17 +6,15 @@ The RHME2 CTF contained a number of challenges that were linked together based o
 
 The following description is given for this challenge:
 
-```
-A senior technical manager of a fridge manufacturer demanded the ability to update the firmware in their new product line (we need to monitor and control the temperature, right?) of all deployed devices over the air and without user interaction. This way, the manufacturer could improve the user experience by providing firmware updates, even when the fridge is 1 or 2 years old.
-
-It turned out that the CPU that comes with the fridges does not allow self-upgrading the firmware, so the developers built a VM for the fridge software which at that time was just a few lines of code. Incidentally, half of the development and test team was fired 2 months after releasing the new product line.
-
-A crafty customer has been able to reverse engineer the software and programmed the fridge with different software. His goal was to build a digital safe, but the guy claims not being able to make the application small enough to fit inside the VM. However, to be sure we ask you to check whether this is correct.
-
-Are you able to crack the password? We have been able to extract the full firmware image of a slightly different fridge and a memory dump of their fridge. We hope this is enough...
-
-Note: The flag is in a different format than usually...
-```
+> A senior technical manager of a fridge manufacturer demanded the ability to update the firmware in their new product line (we need to monitor and control the temperature, right?) of all deployed devices over the air and without user interaction. This way, the manufacturer could improve the user experience by providing firmware updates, even when the fridge is 1 or 2 years old.
+> 
+> It turned out that the CPU that comes with the fridges does not allow self-upgrading the firmware, so the developers built a VM for the fridge software which at that time was just a few lines of code. Incidentally, half of the development and test team was fired 2 months after releasing the new product line.
+> 
+> A crafty customer has been able to reverse engineer the software and programmed the fridge with different software. His goal was to build a digital safe, but the guy claims not being able to make the application small enough to fit inside the VM. However, to be sure we ask you to check whether this is correct.
+> 
+> Are you able to crack the password? We have been able to extract the full firmware image of a slightly different fridge and a memory dump of their fridge. We hope this is enough...
+> 
+> Note: The flag is in a different format than usually...
 
 Apart from the encrypted firmware to be flashed on the board 2 other files are provided: 
 
@@ -442,9 +440,7 @@ Following this same analysis a bit further yields the complete flag: ```Y0u_G0T_
 
 The following description is given for this challenge:
 
-```
-So you found the password last time? This time it got a little bit harder. Instead of hiding it in the VM, it is somewhere else on the device. Are you able to find it?
-```
+> So you found the password last time? This time it got a little bit harder. Instead of hiding it in the VM, it is somewhere else on the device. Are you able to find it?
 
 This time there is only an encrypted firmware file. Basically it still allows us to run a FridgeJIT firmware that we supply.
 
@@ -551,9 +547,9 @@ FLAG:67e0d654a05ee5533e8d57e9e53f3bb9
 
 The following description is given for this challenge:
 
-```
-Damn fridges. It seems there is no end to the problems they bring. And this time time it got even more difficult. I guess you already know in which direction this goes, right?
-```
+
+> Damn fridges. It seems there is no end to the problems they bring. And this time time it got even more difficult. I guess you already know in which direction this goes, right?
+
 
 Given that this challenge is in the category exploitation it seems likely that we need to use the vulnerabilities found in the previous step to gain full code execution outside of the VM.
 
@@ -652,15 +648,13 @@ I used this same exploit to dump the Flash, which worked fine but unfortunately 
 
 The following description is given for this challenge:
 
-```
-The same manager that last time demanded field upgradable software is now asking the development team for an explanation as to why so many users have been able to hack their own fridge. The manager is also asking the legal department if they could sue every single user, but they responded that users are free to do as they want with their own equipment.
-
-This is not acceptable, so the manager threatens to fire everybody unless they solve this major issue before coming Monday. How they resolve it is up to them, as long as it is sorted in the given time frame.
-
-But is the solution sufficient?
-
-Keep in mind that FI can be risky. If you brick your Arduino the game is over. Hence, you should try this challenge after you are done with the other challenges.
-```
+> The same manager that last time demanded field upgradable software is now asking the development team for an explanation as to why so many users have been able to hack their own fridge. The manager is also asking the legal department if they could sue every single user, but they responded that users are free to do as they want with their own equipment.
+> 
+> This is not acceptable, so the manager threatens to fire everybody unless they solve this major issue before coming Monday. How they resolve it is up to them, as long as it is sorted in the given time frame.
+> 
+> But is the solution sufficient?
+> 
+> Keep in mind that FI can be risky. If you brick your Arduino the game is over. Hence, you should try this challenge after you are done with the other challenges.
 
 What has changed from before is that now each program includes some sort of a signature making it no longer possible to run our own programs without obtaining a valid signature.
 
