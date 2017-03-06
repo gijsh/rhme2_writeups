@@ -15,3 +15,11 @@ The writeups are split up per category:
 * [Fault injection](fi/README.md)
 * [Misc](misc/README.md)
 * [FridgeJIT](fridgejit/README.md)
+
+# Interfacing with the board
+
+There are various ways to interface with the board. The technique I used almost everywhere is to create a TCP to serial bridge using [socat](http://www.dest-unreach.org/socat/) and then interfacing over TCP, mostly using hellman's [sock.py library](https://github.com/hellman/sock). Most of the exploit code in this repository assumes that there is a socat TCP to serial bridge running on port 1235. If you want to try the exploits the following socat command can be used to run this bridge:
+
+```
+socat -v -x file:/dev/ttyUSB0,b19200,raw tcp-listen:1235,reuseaddr
+```

